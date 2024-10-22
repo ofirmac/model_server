@@ -27,28 +27,45 @@
 # # Command to run your Flask app
 # CMD ["python3", "server.py"]
 
+#--------
 
-# Use the official Python image
+# # Use the official Python image
+# FROM python:3.9-slim
+
+# # Set environment variables
+# ENV PYTHONDONTWRITEBYTECODE=1
+# ENV PYTHONUNBUFFERED=1
+
+# # Create a working directory
+# WORKDIR /app
+
+# # Install dependencies
+# COPY requirements.txt /app/
+# RUN pip install --upgrade pip
+# RUN pip install -r requirements.txt
+
+# # Copy the rest of the application code
+# COPY . /app/
+
+# # Expose the port the app runs on
+# EXPOSE 8080
+
+# # Command to run the Flask app
+# CMD ["python", "server.py"]
+
+
 FROM python:3.9-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# Install git and other dependencies
+RUN apt-get update && apt-get install -y git
 
-# Create a working directory
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt /app/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+COPY requirements.txt requirements.txt
 
-# Copy the rest of the application code
-COPY . /app/
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port the app runs on
-EXPOSE 8080
+COPY . .
 
-# Command to run the Flask app
 CMD ["python", "server.py"]
-

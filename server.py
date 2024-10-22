@@ -48,6 +48,9 @@ def predict():
     
     model = DQN.load("model/10msteps_19_Oct_24")
 
+    # model = DQN.load("model/10msteps_19_Oct_24", custom_objects={"optimizer": None})
+
+
     # obs_arg = np.array([[[ 6.44454346e+02, -2.35619450e+00, 0.0, float(observation_str[1])],
     #                     [ 5.21175171e+02, -2.61799157e-01, 0.0,float(observation_str[4])],
     #                     [ 1.84370392e+02,  1.83259571e+00, 0.0, float(observation_str[7])],
