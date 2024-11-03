@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from stable_baselines3 import DQN
 import numpy as np
 import logging
+import os
 
 app = Flask(__name__)
 
@@ -130,4 +131,5 @@ def model_status():
 
 if __name__ == '__main__':
     load_model()  # Load the default model at startup
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
