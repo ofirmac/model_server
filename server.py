@@ -15,6 +15,8 @@ global_state = {"count": 0}
 MODEL_PATH = "model/10msteps_19_Oct_24"
 model = None  # Start with no model loaded
 current_model_path = MODEL_PATH  # Track the currently loaded model path
+action_counter = 0 
+phoneme_counts_history = [0,0,0]
 
 def load_model(path=MODEL_PATH):
     """
@@ -54,10 +56,11 @@ def predict():
     """
     Generate a prediction based on the observation provided in the request.
     """
-    global global_state
+    # # first part !!!
+    # global global_state
 
-    # Ensure the model is loaded
-    current_model = load_model()
+    # # Ensure the model is loaded
+    # current_model = load_model()
 
     try:
         # Get observation from the request JSON
@@ -83,17 +86,51 @@ def predict():
         [7.8000000e+01, 7.8000000e+01, 7.8539819e-01, 0.0000000e+00]
     ])
 
-    # Generate prediction from the model
-    action, _states = current_model.predict(obs_arg, deterministic=True)
+    # # Generate prediction from the model
+    # action, _states = current_model.predict(obs_arg, deterministic=True)
 
-     # Log the prediction
-    logger.info(f"Generated prediction: {action} for observation: {obs_arg.tolist()}")
+    #  # Log the prediction
+    # logger.info(f"Generated prediction: {action} for observation: {obs_arg.tolist()}")
 
-    # Structure the response data
+    # # Structure the response data
+    # response = {
+    #     "input_observation": formatted_observation,
+    #     "input_array": obs_arg.tolist(),
+    #     "prediction": int(action)  # Ensure action is JSON serializable
+    # }
+    # return jsonify(response)
+
+    # # seconde part !!!
+    global action_counter, phoneme_counts_history
+    action_counter += 1
+    print(action_counter)
+    # Lists to store data for plotting
+    
+
+    # Extract current phoneme counts from observation
+    phoneme_counts = observation_list
+    
+    # Decide the action based on phoneme counts to promote equality
+    # Find the participant with the lowest phoneme count
+    participant_to_encourage = np.argmin(phoneme_counts_history)
+    action=1
+
+    # Log the phoneme counts and action
+    for i,j in enumerate(phoneme_counts):
+        phoneme_counts_history[i]+= j
+    # Choose the appropriate "encourage" action (5, 6, or 7) based on the participant
+    if action_counter == 25:
+        action = 2 + participant_to_encourage
+
+    if action_counter == 50:
+        action = 5 + participant_to_encourage
+        action_counter = 0
+        phoneme_counts_history = [0,0,0]
+
+    print(phoneme_counts_history)
+
     response = {
-        "input_observation": formatted_observation,
-        "input_array": obs_arg.tolist(),
-        "prediction": int(action)  # Ensure action is JSON serializable
+        "prediction": int(action)
     }
     return jsonify(response)
 
