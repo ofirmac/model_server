@@ -130,7 +130,9 @@ def predict():
     print(phoneme_counts_history)
 
     response = {
-        "prediction": int(action)
+        "_intput": str(obs_arg),  # Mock fixed input string
+        "input": str(formatted_observation),  # Return the input as received, converted to a string
+        "prediction": str(action)
     }
     return jsonify(response)
 
