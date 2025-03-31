@@ -13,5 +13,15 @@ This project runs a Python application using Docker.
 ### 1. Build the Docker Image
 
 ```bash
-docker build -t my-python-app .
-docker run -p 8000:8000 my-python-app
+# builde and run 
+docker build -t model:v1 .
+docker run -p 8080:8080 model:v1
+
+# curl
+# load the model 
+curl -X POST http://localhost:8080/load_model \
+     -H "Content-Type: application/json" \
+     -d '{"path": "./model/Run_all_soft_action_Date_20_Feb_25_Timesteps_10000000_MaxSteps_10000_TalkThreshold_0.7"}'
+
+
+ 
